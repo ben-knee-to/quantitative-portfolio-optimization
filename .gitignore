@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.idea/
+*.py[cod]
+.env
+.DS_Store
+data/raw/*
+data/processed/*
+reports/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!reports/.gitkeep

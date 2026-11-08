@@ -1,35 +1,48 @@
-# Quantitative Portfolio Analytics & Trading Strategy Backtesting
+# Quantitative Trading & Portfolio Optimisation
 
-Educational Python project: market-data acquisition, risk measurement, portfolio optimisation and out-of-sample strategy evaluation.
+Educational financial data science project using eight USD-denominated ETFs: SPY, QQQ, IWM, EFA, EEM, AGG, GLD, VNQ.
 
-## Step 1 — Data acquisition and profiling
-
-Python 3.11 recommended.
+## Windows / PyCharm setup
 
 ```powershell
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 python -m src.step1_market_data
+python run_all.py
 python -m pytest -q
+streamlit run app/streamlit_app.py
 ```
 
-Downloads daily dividend/split-adjusted closing prices for SPY, QQQ, IWM, EFA, EEM, AGG, GLD and VNQ over 2015-01-01 through 2025-12-31. Files are written to `data/raw`, `data/processed` and `reports` (all gitignored). No missing prices are filled.
+All commands should run from the repository root. Historical data downloads require an internet connection.
 
-This first iteration uses USD-denominated assets only. Later stages will add a separate South African / ZAR universe with appropriate currency conversion and calendar alignment. We will reserve 2026 for final forward-style evaluation and use chronological training/validation splits within 2015–2025.
+## Stages
 
-**Data limitations:** Yahoo Finance data may be incomplete or revised. `yfinance` is an unofficial tool; review Yahoo's data-use terms. Do not redistribute raw downloaded datasets in this repository. Adjusted close is suitable for approximate total-return research but not an execution price or perfect total-return series. Survivorship bias remains because today's chosen funds are used historically.
+1. Download and validate 2015–2025 adjusted ETF prices.
+2. Exploratory data analysis, returns, correlations and drawdowns.
+3. Fixed-weight portfolio benchmarks, monthly rebalancing and 10bps costs.
+4. Training-only constrained minimum-variance and max-Sharpe weights.
+5. Historical risk and iid bootstrap scenarios (not forward forecasts).
+6. Prior-close momentum rotation with 126-session lookback.
+7. Lagged-feature logistic-regression direction baseline.
+8. Consolidated evaluation; Streamlit dashboard.
 
-## Roadmap
-1. Acquire and validate market data
-2. EDA: returns, drawdowns, volatility, correlations
-3. Baseline portfolios and risk metrics
-4. Portfolio optimisation
-5. Monte Carlo, VaR, expected shortfall
-6. Systematic strategy design
-7. Cost-aware walk-forward backtesting
-8. Optional ML return/risk forecasts
-9. Streamlit dashboard and reproducibility audit
+## Evaluation integrity
 
-Not investment advice.
+- Train: 2015–2022; validation: 2023–2024; chronological test: 2025.
+- The 2025 asset-level EDA has already been viewed. Therefore the 2025 test is **not a pristine unseen holdout**.
+- Fixed portfolio allocations are predeclared; optimised weights and ML model are fitted on train only.
+- Momentum is a fixed-rule exploratory strategy; it uses prior-close information and no tuning on 2025.
+- The simulator applies a stylised 10bp fee to turnover, not actual brokerage quotes. No tax, FX, spreads, or market impact.
+- Results are historical, not financial advice. Adjusted prices and current ETF selection introduce potential data limitations.
+- The bootstrap assumes independent identically distributed returns and understates regime-change/tail risk.
+
+## GitHub
+
+```powershell
+git add .
+git commit -m "Complete portfolio analytics pipeline and dashboard"
+git push origin main
+```
+
+Generated datasets and reports are excluded from version control by `.gitignore`. Review files before committing secrets.
